@@ -347,3 +347,37 @@ export default function AppointmentDetail() {
                       startIcon={<VideoCall />}
                       onClick={() => router.push(`/appointments/${id}/video`)}
                       disabled={saving}
+                    >
+                      Join Video Call
+                    </Button>
+                  )}
+                </Box>
+              </CardContent>
+            </Card>
+            
+            {/* Cancel Dialog */}
+            <Dialog open={cancelDialogOpen} onClose={() => setCancelDialogOpen(false)}>
+              <DialogTitle>Cancel Appointment</DialogTitle>
+              <DialogContent>
+                <DialogContentText>
+                  Are you sure you want to cancel this appointment? This action cannot be undone.
+                </DialogContentText>
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={() => setCancelDialogOpen(false)}>No, Keep It</Button>
+                <Button 
+                  onClick={() => handleUpdateStatus('cancelled')} 
+                  color="error" 
+                  variant="contained"
+                  disabled={saving}
+                >
+                  Yes, Cancel Appointment
+                </Button>
+              </DialogActions>
+            </Dialog>
+          </>
+        )}
+      </Layout>
+    </ProtectedRoute>
+  );
+}
