@@ -58,10 +58,10 @@ export default function Layout({ children, title = 'Telehealth Platform' }) {
           </IconButton>
           
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            <Link href="/" passHref>
-              <Box component="a" sx={{ color: 'inherit', textDecoration: 'none' }}>
+            <Link href="/" passHref style={{ textDecoration: 'none' }}>
+              <Typography component="span" sx={{ color: 'inherit' }}>
                 Telehealth Platform
-              </Box>
+              </Typography>
             </Link>
           </Typography>
           
