@@ -23,7 +23,8 @@ const theme = createTheme({
 export default function MyApp({
   Component,
   emotionCache = clientSideEmotionCache,
-  pageProps,
+  pageProps
+}) {
   // Get layout from page or use default
   const getLayout = Component.getLayout || ((page) => page);
   const [mounted, setMounted] = React.useState(false);
@@ -44,7 +45,6 @@ export default function MyApp({
           {mounted && getLayout(<Component {...pageProps} />)}
         </AuthProvider>
       </ThemeProvider>
-    </CacheProvider>
     </CacheProvider>
   );
 }
