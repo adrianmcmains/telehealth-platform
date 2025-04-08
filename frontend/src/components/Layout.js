@@ -60,7 +60,7 @@ export default function Layout({ children, title = 'Telehealth Platform' }) {
   const navItems = [
     { label: 'Home', path: '/', icon: <HomeIcon />, auth: false },
     { label: 'Appointments', path: '/appointments', icon: <CalendarIcon />, auth: true },
-    { label: 'Our Doctor', path: '/doctors', icon: <DoctorIcon />, auth: true },
+    { label: 'Find Doctor', path: '/doctors', icon: <DoctorIcon />, auth: true },
     { label: 'Profile', path: '/profile', icon: <PersonIcon />, auth: true },
   ];
 
