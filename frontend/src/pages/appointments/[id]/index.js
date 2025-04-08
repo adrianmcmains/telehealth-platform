@@ -2,8 +2,6 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { 
   Box, 
-  Card, 
-  CardContent, 
   Typography, 
   Button, 
   Grid, 
@@ -29,7 +27,7 @@ import {
   CalendarToday, 
   AccessTime, 
   VideoCall,
-  Person,
+  //Person,
   Email,
   Cancel as CancelIcon,
   Payment as PaymentIcon,
@@ -81,13 +79,7 @@ export default function AppointmentDetail() {
   const [paymentAmount, setPaymentAmount] = useState(75); // Default consultation fee
   const [processingPayment, setProcessingPayment] = useState(false);
   
-  useEffect(() => {
-    if (id) {
-      fetchAppointment();
-    }
-  }, [id]);
-  
-  const fetchAppointment = async () => {
+  const fetchAppointment = useCallback(async () => {
     try {
       setLoading(true);
       const response = await appointmentService.getAppointment(id);
@@ -100,7 +92,13 @@ export default function AppointmentDetail() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [id]);
+
+  useEffect(() => {
+    if (id) {
+      fetchAppointment();
+    }
+  }, [id, fetchAppointment]);
   
   const handleSaveNotes = async () => {
     try {
