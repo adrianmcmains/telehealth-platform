@@ -1,4 +1,5 @@
 import { CacheProvider } from '@emotion/react';
+import React from 'react';
 import { CssBaseline, ThemeProvider, createTheme } from '@mui/material';
 import { createEmotionCache } from '../utils/emotionCache';
 import { AuthProvider } from '../contexts/AuthContext';
@@ -23,9 +24,13 @@ export default function MyApp({
   Component,
   emotionCache = clientSideEmotionCache,
   pageProps,
-}) {
   // Get layout from page or use default
   const getLayout = Component.getLayout || ((page) => page);
+  const [mounted, setMounted] = React.useState(false);
+
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
 
   return (
     <CacheProvider value={emotionCache}>
@@ -36,9 +41,10 @@ export default function MyApp({
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <AuthProvider>
-          {getLayout(<Component {...pageProps} />)}
+          {mounted && getLayout(<Component {...pageProps} />)}
         </AuthProvider>
       </ThemeProvider>
+    </CacheProvider>
     </CacheProvider>
   );
 }
