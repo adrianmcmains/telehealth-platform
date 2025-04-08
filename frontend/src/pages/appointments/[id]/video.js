@@ -83,6 +83,34 @@ export default function VideoCall() {
   const remoteVideoRef = useRef(null);
   const videoContainerRef = useRef(null);
   
+  // Setup mock video call for demonstration
+  const setupMockVideoCall = useCallback(async () => {
+    try {
+      // Get user's video and audio
+      const stream = await navigator.mediaDevices.getUserMedia({ 
+        video: true, 
+        audio: true 
+      });
+      
+      // Display local video
+      if (localVideoRef.current) {
+        localVideoRef.current.srcObject = stream;
+      }
+      
+      // Mock remote video with the same stream for demo purposes
+      // In a real app, this would come from WebRTC peer connection
+      setTimeout(() => {
+        if (remoteVideoRef.current) {
+          remoteVideoRef.current.srcObject = stream;
+        }
+      }, 2000);
+      
+    } catch (err) {
+      console.error('Failed to access camera and microphone:', err);
+      setError('Failed to access your camera and microphone. Please check your permissions.');
+    }
+  }, []);
+
   const fetchAppointment = useCallback(async () => {
     try {
       setLoading(true);
