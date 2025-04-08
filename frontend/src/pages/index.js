@@ -8,7 +8,7 @@ export default function Home() {
   const { isAuthenticated, user } = useAuth();
 
   return (
-    <Layout title={null}>
+    <Layout title="Home">
       {/* Hero Section */}
       <Box
         sx={{
