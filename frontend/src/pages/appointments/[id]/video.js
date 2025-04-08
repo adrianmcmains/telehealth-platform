@@ -83,22 +83,7 @@ export default function VideoCall() {
   const remoteVideoRef = useRef(null);
   const videoContainerRef = useRef(null);
   
-  useEffect(() => {
-    if (id) {
-      fetchAppointment();
-    }
-    
-    // Auto-hide controls after 5 seconds of inactivity
-    const timer = setTimeout(() => {
-      if (!anchorEl) {
-        setShowControls(false);
-      }
-    }, 5000);
-    
-    return () => clearTimeout(timer);
-  }, [id, anchorEl, fetchAppointment]);
-  
-  const fetchAppointment = async () => {
+  const fetchAppointment = useCallback(async () => {
     try {
       setLoading(true);
       const response = await appointmentService.getAppointment(id);
@@ -121,7 +106,22 @@ export default function VideoCall() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [id, setupMockVideoCall]);
+
+  useEffect(() => {
+    if (id) {
+      fetchAppointment();
+    }
+    
+    // Auto-hide controls after 5 seconds of inactivity
+    const timer = setTimeout(() => {
+      if (!anchorEl) {
+        setShowControls(false);
+      }
+    }, 5000);
+    
+    return () => clearTimeout(timer);
+  }, [id, anchorEl, fetchAppointment]);
   
   // Setup mock video call for demonstration
   const setupMockVideoCall = async () => {
