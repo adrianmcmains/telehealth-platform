@@ -1,0 +1,1 @@
+find . -type f -not -path "./.git/*" -not -path "./node_modules/*" -not -path "./.gitignore" -not -path "./.env" | entr -r ./git-auto-push.sh
