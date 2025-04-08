@@ -96,7 +96,7 @@ export default function VideoCall() {
     }, 5000);
     
     return () => clearTimeout(timer);
-  }, [id, anchorEl]);
+  }, [id, anchorEl, fetchAppointment]);
   
   const fetchAppointment = async () => {
     try {
