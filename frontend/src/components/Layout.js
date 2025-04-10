@@ -1,3 +1,5 @@
+// frontend/src/components/Layout.js
+
 import React, { useState } from 'react';
 import { 
   AppBar, 
@@ -24,6 +26,7 @@ import {
   Home as HomeIcon,
   CalendarToday as CalendarIcon,
   Person as PersonIcon,
+  MedicalServices,
   MedicalServices as DoctorIcon,
   ArrowDropDown as ArrowIcon,
   ExitToApp as LogoutIcon
@@ -60,8 +63,8 @@ export default function Layout({ children, title = 'Telehealth Platform' }) {
   const navItems = [
     { label: 'Home', path: '/', icon: <HomeIcon />, auth: false },
     { label: 'Appointments', path: '/appointments', icon: <CalendarIcon />, auth: true },
-    { label: 'Find Doctor', path: '/doctors', icon: <DoctorIcon />, auth: true },
-    { label: 'Profile', path: '/profile', icon: <PersonIcon />, auth: true },
+    { label: 'Our Doctors', path: '/doctors', icon: <DoctorIcon />, auth: true },
+    { label: 'Services', path: '/services', icon: <MedicalServices />, auth: false },
   ];
 
   const filteredNavItems = navItems.filter(item => 
@@ -170,44 +173,42 @@ export default function Layout({ children, title = 'Telehealth Platform' }) {
             <MenuIcon />
           </IconButton>
           
-          <Box 
-            component="img" 
-            src="/logo.png" 
-            alt="Telehealth Logo"
-            sx={{ 
-              height: 40, 
-              mr: 2,
-              display: { xs: 'none', sm: 'block' }
-            }}
-          />
+          <Link href="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center' }}>
+            <Box 
+              component="img" 
+              src="/logo.png" 
+              alt="Dr.Ndaara Logo"
+              sx={{ 
+                height: 40, 
+                mr: 2,
+                display: 'block'
+              }}
+            />
+            <Typography variant="h6" component="div" sx={{ flexGrow: 0, fontWeight: 800, color: theme.palette.primary.main }}>
+              Dr.Ndaara
+            </Typography>
+          </Link>
           
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1, fontWeight: 600 }}>
-            <Link href="/" style={{ color: 'inherit', textDecoration: 'none' }}>
-              Telehealth
-            </Link>
-          </Typography>
+          <Box sx={{ flexGrow: 1 }} />
           
           {!isMobile && (
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
               {filteredNavItems.map((item) => (
-                item.path !== '/' && (
-                  <Link href={item.path} key={item.path} passHref legacyBehavior>
-                    <Button 
-                      component="a"
-                      startIcon={item.icon}
-                      sx={{ 
-                        mx: 1,
-                        color: router.pathname === item.path ? theme.palette.primary.main : 'inherit',
-                        fontWeight: router.pathname === item.path ? 600 : 400,
-                        '&:hover': {
-                          backgroundColor: 'rgba(0, 99, 176, 0.04)',
-                        }
-                      }}
-                    >
-                      {item.label}
-                    </Button>
-                  </Link>
-                )
+                <Link href={item.path} key={item.path} passHref legacyBehavior>
+                  <Button 
+                    component="a"
+                    sx={{ 
+                      mx: 1,
+                      color: router.pathname === item.path ? theme.palette.primary.main : 'inherit',
+                      fontWeight: router.pathname === item.path ? 600 : 400,
+                      '&:hover': {
+                        backgroundColor: 'rgba(0, 99, 176, 0.04)',
+                      }
+                    }}
+                  >
+                    {item.label}
+                  </Button>
+                </Link>
               ))}
             </Box>
           )}
@@ -260,6 +261,14 @@ export default function Layout({ children, title = 'Telehealth Platform' }) {
                     <ListItemText primary="My Profile" />
                   </MenuItem>
                 </Link>
+                <Link href="/appointments" passHref legacyBehavior>
+                  <MenuItem component="a" onClick={handleProfileMenuClose}>
+                    <ListItemIcon>
+                      <CalendarIcon fontSize="small" />
+                    </ListItemIcon>
+                    <ListItemText primary="My Appointments" />
+                  </MenuItem>
+                </Link>
                 <Divider />
                 <MenuItem onClick={handleLogout}>
                   <ListItemIcon>
@@ -294,87 +303,120 @@ export default function Layout({ children, title = 'Telehealth Platform' }) {
         </Toolbar>
       </AppBar>
       
-      <Box
-        component="nav"
-        sx={{ width: { md: 280 }, flexShrink: { md: 0 } }}
+      <Drawer
+        variant="temporary"
+        open={mobileOpen}
+        onClose={handleDrawerToggle}
+        ModalProps={{ keepMounted: true }}
+        sx={{
+          display: { xs: 'block', md: 'none' },
+          '& .MuiDrawer-paper': { width: 280, boxSizing: 'border-box' },
+        }}
       >
-        <Drawer
-          variant="temporary"
-          open={mobileOpen}
-          onClose={handleDrawerToggle}
-          ModalProps={{ keepMounted: true }}
-          sx={{
-            display: { xs: 'block', md: 'none' },
-            '& .MuiDrawer-paper': { width: 280, boxSizing: 'border-box' },
-          }}
-        >
-          {drawer}
-        </Drawer>
-        <Drawer
-          variant="permanent"
-          sx={{
-            display: { xs: 'none', md: 'block' },
-            '& .MuiDrawer-paper': { width: 280, boxSizing: 'border-box', borderRight: '1px solid rgba(0, 0, 0, 0.08)' },
-          }}
-          open
-        >
-          {drawer}
-        </Drawer>
-      </Box>
+        {drawer}
+      </Drawer>
       
       <Box
         component="main"
         sx={{
           flexGrow: 1,
-          p: 3,
-          width: { md: `calc(100% - 280px)` },
+          width: '100%',
           minHeight: '100vh',
           mt: '64px',
           display: 'flex',
           flexDirection: 'column'
         }}
       >
-        {title && (
-          <Typography 
-            variant="h4" 
-            component="h1" 
-            gutterBottom
-            sx={{ 
-              fontWeight: 600, 
-              mb: 4, 
-              color: theme.palette.text.primary,
-              borderBottom: `1px solid ${theme.palette.divider}`,
-              pb: 2
-            }}
-          >
-            {title}
-          </Typography>
+        {title && router.pathname !== '/' && (
+          <Container maxWidth="xl" sx={{ pt: 4 }}>
+            <Typography 
+              variant="h4" 
+              component="h1" 
+              gutterBottom
+              sx={{ 
+                fontWeight: 600, 
+                mb: 4, 
+                color: theme.palette.text.primary,
+                borderBottom: `1px solid ${theme.palette.divider}`,
+                pb: 2
+              }}
+            >
+              {title}
+            </Typography>
+          </Container>
         )}
         
-        <Container 
-          maxWidth="xl" 
-          sx={{ 
-            flexGrow: 1, 
-            py: 2,
-            px: { xs: 1, sm: 3 }
-          }}
-        >
+        <Box sx={{ flexGrow: 1 }}>
           {children}
-        </Container>
+        </Box>
         
         <Box 
           component="footer" 
           sx={{ 
-            py: 3, 
-            borderTop: `1px solid ${theme.palette.divider}`, 
+            py: 4, 
             mt: 'auto',
-            backgroundColor: 'white'
+            backgroundColor: theme.palette.grey[100],
+            borderTop: `1px solid ${theme.palette.divider}`
           }}
         >
           <Container maxWidth="lg">
-            <Typography variant="body2" color="text.secondary" align="center">
-              © {new Date().getFullYear()} Telehealth Platform. All rights reserved.
-            </Typography>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap' }}>
+              <Box sx={{ mb: { xs: 3, md: 0 } }}>
+                <Typography variant="h6" color="text.primary" gutterBottom>
+                  Telehealth Platform
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  © {new Date().getFullYear()} Dr. Ndaara Telehealth Platform. All rights reserved.
+                </Typography>
+              </Box>
+              <Box sx={{ display: 'flex', gap: 4, flexWrap: 'wrap' }}>
+                <Box>
+                  <Typography variant="subtitle2" fontWeight={600} gutterBottom>
+                    Company
+                  </Typography>
+                  <Link href="/about" passHref legacyBehavior>
+                    <Typography component="a" variant="body2" color="text.secondary" sx={{ display: 'block', mb: 1, textDecoration: 'none', '&:hover': { color: 'primary.main' } }}>
+                      About Us
+                    </Typography>
+                  </Link>
+                  <Link href="/contact" passHref legacyBehavior>
+                    <Typography component="a" variant="body2" color="text.secondary" sx={{ display: 'block', mb: 1, textDecoration: 'none', '&:hover': { color: 'primary.main' } }}>
+                      Contact
+                    </Typography>
+                  </Link>
+                </Box>
+                <Box>
+                  <Typography variant="subtitle2" fontWeight={600} gutterBottom>
+                    Resources
+                  </Typography>
+                  <Link href="/faq" passHref legacyBehavior>
+                    <Typography component="a" variant="body2" color="text.secondary" sx={{ display: 'block', mb: 1, textDecoration: 'none', '&:hover': { color: 'primary.main' } }}>
+                      FAQ
+                    </Typography>
+                  </Link>
+                  <Link href="/services" passHref legacyBehavior>
+                    <Typography component="a" variant="body2" color="text.secondary" sx={{ display: 'block', mb: 1, textDecoration: 'none', '&:hover': { color: 'primary.main' } }}>
+                      Services
+                    </Typography>
+                  </Link>
+                </Box>
+                <Box>
+                  <Typography variant="subtitle2" fontWeight={600} gutterBottom>
+                    Legal
+                  </Typography>
+                  <Link href="/privacy" passHref legacyBehavior>
+                    <Typography component="a" variant="body2" color="text.secondary" sx={{ display: 'block', mb: 1, textDecoration: 'none', '&:hover': { color: 'primary.main' } }}>
+                      Privacy Policy
+                    </Typography>
+                  </Link>
+                  <Link href="/terms" passHref legacyBehavior>
+                    <Typography component="a" variant="body2" color="text.secondary" sx={{ display: 'block', mb: 1, textDecoration: 'none', '&:hover': { color: 'primary.main' } }}>
+                      Terms of Service
+                    </Typography>
+                  </Link>
+                </Box>
+              </Box>
+            </Box>
           </Container>
         </Box>
       </Box>

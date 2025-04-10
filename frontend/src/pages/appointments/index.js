@@ -1,3 +1,4 @@
+// frontend/src/pages/appointments/index.js
 import { useState, useEffect } from 'react';
 import { 
   Box, 
@@ -17,13 +18,12 @@ import {
   Avatar
 } from '@mui/material';
 import { 
-  CalendarToday, 
   AccessTime, 
   VideoCall,
   Add as AddIcon,
-  ArrowForward
+  // Removed unused imports: CalendarToday, ArrowForward
 } from '@mui/icons-material';
-import { format, isPast, isToday, isTomorrow, isAfter, addDays } from 'date-fns';
+import { format, isPast, isToday, isTomorrow, isAfter } from 'date-fns';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import Layout from '../../components/Layout';
@@ -102,8 +102,6 @@ export default function Appointments() {
 
   // Filter appointments based on tab
   const filterAppointments = () => {
-    const now = new Date();
-    
     switch (tabValue) {
       case 0: // Upcoming
         return appointments.filter(appt => 
@@ -288,3 +286,102 @@ export default function Appointments() {
                                         {user?.role === 'patient' 
                                           ? `Dr. ${appointment.doctor.firstName} ${appointment.doctor.lastName}` 
                                           : `${appointment.patient.firstName} ${appointment.patient.lastName}`}
+                                      </Typography>
+                                      <Chip 
+                                        label={statusLabels[appointment.status]} 
+                                        color={statusColors[appointment.status] || 'default'} 
+                                        size="small"
+                                        sx={{ mt: 0.5 }}
+                                      />
+                                    </Box>
+                                  </Box>
+                                  
+                                  <Divider sx={{ my: 2, display: { md: 'none' } }} />
+                                  
+                                  <Typography variant="body2" color="text.secondary" sx={{ mt: 2 }}>
+                                    {appointment.reason}
+                                  </Typography>
+                                </Grid>
+                                
+                                <Grid item xs={12} md={4}>
+                                  <Box sx={{ 
+                                    display: 'flex', 
+                                    flexDirection: 'column', 
+                                    height: '100%',
+                                    justifyContent: 'space-between',
+                                    alignItems: { xs: 'flex-start', md: 'flex-end' },
+                                    borderLeft: { xs: 'none', md: `1px solid ${theme.palette.divider}` },
+                                    pl: { xs: 0, md: 2 }
+                                  }}>
+                                    <Box>
+                                      <Box sx={{ display: 'flex', alignItems: 'center', mb: 1, justifyContent: { xs: 'flex-start', md: 'flex-end' } }}>
+                                        <AccessTime fontSize="small" sx={{ mr: 1, color: theme.palette.text.secondary }} />
+                                        <Typography variant="body2" color="text.secondary">
+                                          {format(new Date(appointment.startTime), 'h:mm a')} - {format(new Date(appointment.endTime), 'h:mm a')}
+                                        </Typography>
+                                      </Box>
+                                    </Box>
+                                    
+                                    <Box sx={{ 
+                                      display: 'flex', 
+                                      gap: 1, 
+                                      mt: 2,
+                                      width: { xs: '100%', md: 'auto' }
+                                    }}>
+                                      <Button 
+                                        variant="outlined" 
+                                        onClick={() => handleViewDetails(appointment.id)}
+                                        size="small"
+                                        sx={{ 
+                                          borderRadius: 1.5,
+                                          flex: { xs: 1, md: 'unset' }
+                                        }}
+                                      >
+                                        Details
+                                      </Button>
+                                      
+                                      {appointment.status === 'scheduled' && !isPast(new Date(appointment.endTime)) && (
+                                        <Button 
+                                          variant="contained" 
+                                          color="primary"
+                                          startIcon={<VideoCall />}
+                                          onClick={() => handleJoinAppointment(appointment.id)}
+                                          size="small"
+                                          sx={{ 
+                                            borderRadius: 1.5,
+                                            flex: { xs: 1, md: 'unset' }
+                                          }}
+                                        >
+                                          Join
+                                        </Button>
+                                      )}
+                                    </Box>
+                                  </Box>
+                                </Grid>
+                              </Grid>
+                            </CardContent>
+                          </Card>
+                        </Grid>
+                      ))}
+                    </Grid>
+                  </Box>
+                ))}
+              </Box>
+            )}
+          </Box>
+        </Paper>
+        
+        {/* Help Section */}
+        <Box sx={{ mt: 6 }}>
+          <Typography variant="h6" gutterBottom>
+            Need Help?
+          </Typography>
+          <Typography variant="body1" paragraph>
+            If you need to change or cancel an appointment, please do so at least 24 hours in advance.
+            For any issues or questions, please contact us at support@drndaara.com.
+          </Typography>
+        </Box>
+      </Layout>
+    </ProtectedRoute>
+  );
+}
